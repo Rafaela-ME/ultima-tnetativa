@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aquecimento Solar da Piscina Escolar | Projeto Integrador</title>
+  <meta name="description" content="Projeto Integrador: aquecimento solar da piscina escolar com coletores solares, placas fotovoltaicas, manta térmica e caldeira de apoio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+/* =========================================================
+   Aquecimento Solar da Piscina Escolar — estilos
+   ========================================================= */
+
+:root {
+  /* Cores do tema */
+  --fundo: #fffaf1;
+  --fundo-2: #fff3dc;
+  --papel: #ffffff;
+  --tinta: #1d2a33;
+  --tinta-suave: #4a5a66;
+  --linha: #ecdfc6;
+  --sol: #f59f00;
+  --sol-escuro: #c76a00;
+  --agua: #0b7285;
+  --agua-clara: #e3f6f8;
+  --alerta: #c92a2a;
+
+  /* Cor de cada apresentador(a) */
+  --amanda: #e8590c;
+  --beatriz: #1971c2;
+  --daniel: #2b8a3e;
+  --rafaela: #9c36b5;
+  --todos: #495057;
+
+  --raio: 16px;
+  --sombra: 0 6px 24px rgba(60, 40, 0, 0.08);
+  --fonte-titulo: "Sora", system-ui, sans-serif;
+  --fonte-texto: "Source Sans 3", system-ui, sans-serif;
+  --fonte-codigo: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+body {
+  margin: 0;
+  font-family: var(--fonte-texto);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--tinta);
+  background: var(--fundo);
+}
+
+a { color: var(--agua); text-underline-offset: 3px; }
+a:hover { color: var(--sol-escuro); }
+
+h1, h2, h3 { font-family: var(--fonte-titulo); line-height: 1.2; margin: 0 0 0.6em; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+h3 { font-size: 1.2rem; margin-top: 1.4em; }
+.cartao h3 { margin-top: 0; }
+p { margin: 0 0 1em; }
+
+/* ---------- Barra de progresso ---------- */
+.progresso-leitura {
+  position: fixed; top: 0; left: 0; height: 4px; width: 0;
+  background: linear-gradient(90deg, var(--sol), var(--agua));
+  z-index: 60;
+}
+
+/* ---------- Cabeçalho ---------- */
+.topo {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 1.5rem;
+  padding: 0.8rem clamp(1rem, 4vw, 3rem);
+  background: rgba(255, 250, 241, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--linha);
+}
+.topo-marca {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--fonte-titulo); font-weight: 800; font-size: 1.05rem;
+  color: var(--tinta); text-decoration: none; white-space: nowrap;
+}
+.sol-mini {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: radial-gradient(circle, #ffd43b 40%, var(--sol) 70%);
+  box-shadow: 0 0 0 4px rgba(245, 159, 0, 0.2);
+}
+.topo-links { display: flex; gap: 1.1rem; margin-left: auto; flex-wrap: wrap; }
+.topo-links a { color: var(--tinta-suave); text-decoration: none; font-weight: 600; font-size: 0.98rem; }
+.topo-links a:hover { color: var(--sol-escuro); }
+
+.botao-apresentar {
+  font: 700 0.95rem var(--fonte-titulo);
+  background: var(--tinta); color: #fff;
+  border: 0; border-radius: 999px; padding: 0.6rem 1.1rem;
+  cursor: pointer; white-space: nowrap;
+}
+.botao-apresentar:hover { background: var(--sol-escuro); }
+
+/* ---------- Seções (slides) ---------- */
+.slide {
+  position: relative;
+  padding: clamp(3rem, 7vw, 5.5rem) clamp(1rem, 5vw, 4rem);
+  border-bottom: 1px solid var(--linha);
+}
+.slide:nth-of-type(even) { background: var(--fundo-2); }
+
+.conteudo { max-width: 1100px; margin: 0 auto; }
+
+/* Selo "Apresenta: Fulana" (criado pelo script) */
+.selo-apresentador {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  margin-bottom: 1rem;
+  padding: 0.3rem 0.85rem 0.3rem 0.55rem;
+  border-radius: 999px;
+  font: 700 0.9rem var(--fonte-titulo);
+  color: #fff; background: var(--cor, var(--todos));
+}
+.selo-apresentador::before {
+  content: ""; width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: 0.85;
+}
+.slide { border-left: 6px solid var(--cor, transparent); }
+
+.num {
+  display: inline-grid; place-items: center;
+  min-width: 2.4rem; height: 2.4rem; padding: 0 0.5rem;
+  border-radius: 12px;
+  background: var(--sol); color: #fff;
+  font-size: 1.1rem;
+}
+
+/* ---------- Capa ---------- */
+.capa {
+  display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 196, 0, 0.55), transparent 30%),
+    radial-gradient(circle at 10% 100%, rgba(21, 170, 191, 0.45), transparent 40%),
+    linear-gradient(160deg, #0d1b2a 0%, #123248 60%, #0b4f5f 100%) !important;
+}
+.capa .sobretitulo { color: #ffd43b; }
+.capa .capa-sub { color: #cfe3ea; }
+.capa .capa-equipe li { background: rgba(255,255,255,0.08); color: #fff; border-color: var(--cor); }
+.capa .foto img { border: 6px solid rgba(255,255,255,0.12); box-shadow: 0 25px 60px rgba(0,0,0,0.45); }
+.capa .foto figcaption { color: #9fbccb; }
+.capa .vaga-imagem { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.35); color: #cfe3ea; }
+.capa .vaga-imagem .vaga-nome { color: #ffd43b; }
+.capa .vaga-imagem code { background: rgba(0,0,0,0.3); color: #fff; border-color: transparent; }
+.capa .selo-apresentador { grid-column: 1 / -1; justify-self: start; margin-bottom: 0; }
+.sobretitulo {
+  font: 700 0.95rem var(--fonte-titulo); text-transform: uppercase; letter-spacing: 0.14em;
+  color: var(--sol-escuro); margin-bottom: 0.8rem;
+}
+.capa h1 { font-size: clamp(2.2rem, 4.4vw, 3.7rem); font-weight: 800; letter-spacing: -0.02em; }
+.capa-sub { font-size: 1.25rem; color: var(--tinta-suave); max-width: 34ch; }
+.capa-equipe { list-style: none; padding: 0; margin: 1.6rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.capa-equipe li {
+  padding: 0.45rem 1rem; border-radius: 999px;
+  border: 2px solid var(--cor); color: var(--cor);
+  background: #fff; font: 700 1rem var(--fonte-titulo);
+}
+
+/* ---------- Imagens ---------- */
+.foto { margin: 0; }
+.foto img {
+  display: none; width: 100%; height: auto;
+  border-radius: var(--raio); box-shadow: var(--sombra);
+  object-fit: cover; max-height: 520px;
+}
+.foto.carregada img { display: block; }
+.foto figcaption { font-size: 0.95rem; color: var(--tinta-suave); margin-top: 0.5rem; text-align: center; }
+
+/* Espaço reservado enquanto a imagem não foi colocada */
+.vaga-imagem {
+  display: grid; place-items: center; text-align: center; gap: 0.3rem;
+  min-height: 260px; padding: 1.5rem;
+  border: 3px dashed #d8c39b; border-radius: var(--raio);
+  background: repeating-linear-gradient(45deg, #fffdf8, #fffdf8 12px, #fff6e6 12px, #fff6e6 24px);
+  color: var(--tinta-suave);
+}
+.vaga-imagem .vaga-icone { font-size: 2.2rem; }
+.vaga-imagem .vaga-nome { font: 800 1.3rem var(--fonte-titulo); color: var(--sol-escuro); }
+.vaga-imagem code { font-family: var(--fonte-codigo); font-size: 0.85rem; background: #fff; padding: 0.15rem 0.45rem; border-radius: 6px; border: 1px solid var(--linha); }
+.foto.carregada .vaga-imagem { display: none; }
+.foto-capa .vaga-imagem { min-height: 380px; }
+.foto-media { max-width: 720px; margin: 2rem auto 0; }
+
+/* ---------- Layouts ---------- */
+.duas-colunas { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: start; }
+.conteudo.duas-colunas { align-items: center; }
+.grade-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.2rem 0; }
+.grade-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; margin: 1.2rem 0; }
+
+/* ---------- Cartões e listas ---------- */
+.cartao {
+  background: var(--papel); border: 1px solid var(--linha);
+  border-radius: var(--raio); padding: 1.3rem 1.4rem; box-shadow: var(--sombra);
+}
+.cartao p:last-child { margin-bottom: 0; }
+.cartao-icone { font-size: 1.9rem; display: block; margin-bottom: 0.4rem; }
+.cartao-sol { border-top: 5px solid var(--sol); }
+.cartao-azul { border-top: 5px solid var(--agua); }
+.cartao-alerta { border-top: 5px solid var(--alerta); }
+
+.lista-cartoes { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0.7rem; }
+.lista-cartoes li {
+  background: var(--papel); border: 1px solid var(--linha); border-left: 5px solid var(--sol);
+  border-radius: 12px; padding: 0.8rem 1rem;
+}
+
+.passos { counter-reset: passo; list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0.6rem; }
+.passos li { counter-increment: passo; position: relative; padding: 0.55rem 0.8rem 0.55rem 3.1rem; background: var(--papel); border-radius: 12px; border: 1px solid var(--linha); }
+.passos li::before {
+  content: counter(passo);
+  position: absolute; left: 0.6rem; top: 0.5rem;
+  width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--agua); color: #fff; font: 700 0.95rem var(--fonte-titulo);
+}
+
+.destaque-grande { font-size: clamp(1.3rem, 2.4vw, 1.7rem); font-family: var(--fonte-titulo); font-weight: 500; line-height: 1.35; }
+.resultado {
+  background: var(--agua-clara); border-left: 5px solid var(--agua);
+  padding: 0.9rem 1.1rem; border-radius: 12px; font-size: 1.15rem;
+}
+.nota { font-size: 0.95rem; color: var(--tinta-suave); font-style: italic; }
+
+.caixa-fisica {
+  margin-top: 1.6rem; padding: 1.2rem 1.4rem;
+  background: #1d2a33; color: #f1f3f5; border-radius: var(--raio);
+}
+.caixa-fisica h3 { margin-top: 0; color: #ffd43b; }
+.caixa-fisica p:last-child { margin-bottom: 0; }
+
+/* ---------- Espectro (seção 1) ---------- */
+.barra-espectro { display: flex; height: 46px; border-radius: 12px; overflow: hidden; margin: 1.2rem 0; box-shadow: var(--sombra); }
+.faixa { display: grid; place-items: center; color: #fff; font: 700 0.95rem var(--fonte-titulo); white-space: nowrap; }
+.faixa.iv { background: #c92a2a; }
+.faixa.vis { background: linear-gradient(90deg, #f76707, #fab005, #40c057, #228be6, #7048e8); }
+.faixa.uv { background: #5f3dc4; }
+
+/* ---------- Número gigante (seção 5) ---------- */
+.numero-gigante {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 1rem;
+  padding: 1.4rem 1.6rem; margin: 1rem 0 1.4rem;
+  background: linear-gradient(120deg, #fff3bf, #ffe8cc);
+  border-radius: var(--raio);
+}
+.numero-gigante .valor { font: 800 clamp(2.6rem, 6vw, 4.2rem) var(--fonte-titulo); color: var(--sol-escuro); }
+.numero-gigante .rotulo { font-size: 1.2rem; max-width: 30ch; }
+
+/* ---------- Fluxo (seção 6) ---------- */
+.fluxo { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 1rem 0 1.6rem; }
+.fluxo-passo {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+  min-width: 96px; padding: 0.8rem 0.7rem; text-align: center;
+  background: var(--papel); border: 2px solid var(--agua); border-radius: 14px;
+  font-size: 1.6rem;
+}
+.fluxo-passo span { font: 700 0.85rem var(--fonte-titulo); color: var(--tinta); }
+.fluxo-passo.sol { border-color: var(--sol); background: #fff9db; }
+.fluxo-passo.apoio { border-style: dashed; border-color: var(--tinta-suave); }
+.fluxo-seta { font-size: 1.5rem; color: var(--tinta-suave); font-weight: 700; }
+
+/* ---------- Tabelas ---------- */
+.tabela-rolagem { overflow-x: auto; margin: 1rem 0; border-radius: var(--raio); box-shadow: var(--sombra); }
+table { width: 100%; border-collapse: collapse; background: var(--papel); min-width: 560px; }
+th, td { padding: 0.85rem 1rem; text-align: left; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { background: var(--tinta); color: #fff; font: 700 0.95rem var(--fonte-titulo); }
+tbody tr:hover { background: #fffaf0; }
+.linha-escolhida { background: #ebfbee; font-weight: 600; }
+.linha-escolhida td:first-child { color: var(--daniel); }
+
+/* ---------- Gráfico de barras (seção 12) ---------- */
+.grafico-barras { background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); padding: 1.1rem 1.3rem; margin: 1rem 0; }
+.grafico-titulo { font: 700 1rem var(--fonte-titulo); margin-bottom: 0.8rem; }
+.barra-linha { display: grid; grid-template-columns: 70px 1fr 50px; align-items: center; gap: 0.7rem; margin-bottom: 0.6rem; }
+.barra-rotulo { font-weight: 600; }
+.barra-trilho { height: 26px; background: #f1f3f5; border-radius: 6px; overflow: hidden; }
+.barra { display: block; height: 100%; border-radius: 6px; }
+.barra.verao { background: var(--sol); }
+.barra.inverno { background: var(--agua); }
+.barra-valor { font: 700 1rem var(--fonte-titulo); }
+.grafico-nota { font-size: 0.95rem; color: var(--tinta-suave); margin: 0.4rem 0 0; }
+
+/* ---------- Código ---------- */
+.codigo-caixa { position: relative; margin: 1.4rem 0; }
+.codigo-caixa pre {
+  margin: 0; padding: 1.3rem 1.4rem; overflow-x: auto;
+  background: #11181d; color: #e9ecef; border-radius: var(--raio);
+  font: 0.92rem/1.55 var(--fonte-codigo);
+}
+.botao-copiar {
+  position: absolute; top: 0.7rem; right: 0.7rem;
+  font: 600 0.85rem var(--fonte-texto);
+  background: #343a40; color: #fff; border: 0; border-radius: 8px; padding: 0.35rem 0.75rem; cursor: pointer;
+}
+.botao-copiar:hover { background: var(--sol-escuro); }
+
+/* ---------- Simulador (seção 11) ---------- */
+.simulador { background: var(--papel); border: 2px solid var(--agua); border-radius: var(--raio); padding: 1.2rem 1.4rem; margin: 1.4rem 0; }
+.simulador h3 { margin-top: 0; }
+.simulador-corpo { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center; }
+.simulador input[type="range"] { width: 100%; accent-color: var(--agua); height: 2rem; }
+.simulador-escala { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--tinta-suave); }
+.simulador-led { text-align: center; min-width: 170px; }
+.simulador-led p { margin: 0.5rem 0 0; font: 700 1rem var(--fonte-titulo); }
+.led {
+  width: 64px; height: 64px; margin: 0 auto; border-radius: 50%;
+  background: #5c1a1a; border: 4px solid #343a40; transition: 0.25s;
+}
+.led.aceso { background: #ff3b3b; box-shadow: 0 0 28px 8px rgba(255, 59, 59, 0.6); }
+
+/* ---------- Roteiro ---------- */
+.roteiro-grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.1rem; }
+.roteiro-cartao { background: var(--papel); border-radius: var(--raio); padding: 1.2rem 1.3rem; border-top: 6px solid var(--cor); box-shadow: var(--sombra); }
+.roteiro-cartao h3 { margin-top: 0; color: var(--cor); font-size: 1.4rem; }
+.roteiro-cartao ol { margin: 0; padding-left: 1.6rem; }
+.roteiro-cartao li { margin-bottom: 0.35rem; }
+.roteiro-cartao a { color: var(--tinta); }
+
+/* ---------- Conclusão e fontes ---------- */
+.conclusao {
+  color: #fff;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(255, 196, 0, 0.45), transparent 30%),
+    linear-gradient(160deg, #0d1b2a 0%, #123248 60%, #0b4f5f 100%) !important;
+}
+.conclusao .cartao { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); color: #fff; box-shadow: none; }
+.conclusao .destaque-grande { color: #e6f1f5; }
+.agradecimento { font: 800 clamp(2rem, 5vw, 3.4rem) var(--fonte-titulo); color: #ffd43b; margin-top: 1.5rem; }
+.lista-fontes { padding-left: 1.4rem; }
+.lista-fontes li { margin-bottom: 0.9rem; }
+
+/* ---------- Rodapé ---------- */
+.rodape { text-align: center; padding: 2.5rem 1rem; background: var(--tinta); color: #dee2e6; }
+.rodape p { margin: 0.2rem 0; }
+
+/* =========================================================
+   MODO APRESENTAÇÃO
+   ========================================================= */
+body.modo-apresentacao { overflow: hidden; }
+body.modo-apresentacao .topo,
+body.modo-apresentacao .rodape,
+body.modo-apresentacao .progresso-leitura { display: none; }
+
+body.modo-apresentacao .slide {
+  display: none;
+  position: fixed; inset: 0;
+  overflow-y: auto;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 6vw, 6rem) 7rem;
+  border-bottom: 0;
+  font-size: 1.22rem;
+  animation: entrar 0.35s ease;
+}
+body.modo-apresentacao .slide.ativo { display: block; }
+body.modo-apresentacao .slide.capa.ativo { display: grid; }
+body.modo-apresentacao .conteudo { max-width: 1250px; }
+
+@keyframes entrar { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.controles-apresentacao {
+  position: fixed; left: 50%; bottom: 1.1rem; transform: translateX(-50%);
+  z-index: 100;
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.6rem 0.9rem;
+  background: rgba(29, 42, 51, 0.94); color: #fff;
+  border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.controles-apresentacao[hidden] { display: none; }
+.controles-apresentacao button {
+  font: 700 1.1rem var(--fonte-titulo);
+  background: rgba(255, 255, 255, 0.1); color: #fff;
+  border: 0; border-radius: 12px; padding: 0.5rem 0.9rem; cursor: pointer;
+}
+.controles-apresentacao button:hover { background: var(--sol); }
+.controles-secundario { font-size: 0.9rem !important; }
+.controles-info { display: flex; flex-direction: column; align-items: center; min-width: 120px; line-height: 1.2; }
+.controles-quem { font: 700 1rem var(--fonte-titulo); padding: 0.1rem 0.7rem; border-radius: 999px; background: var(--cor, var(--todos)); }
+.controles-contador { font-size: 0.85rem; opacity: 0.8; margin-top: 0.2rem; }
+.controles-barra { position: absolute; left: 12px; right: 12px; bottom: 6px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 4px; overflow: hidden; }
+.controles-barra span { display: block; height: 100%; width: 0; background: var(--sol); transition: width 0.3s; }
+
+/* =========================================================
+   CELULAR / TELAS PEQUENAS
+   ========================================================= */
+@media (max-width: 900px) {
+  .topo-links { display: none; }
+  .botao-apresentar { margin-left: auto; }
+  .capa, .duas-colunas, .conteudo.duas-colunas { grid-template-columns: 1fr; }
+  .capa { min-height: auto; }
+  .grade-2 { grid-template-columns: 1fr; }
+  .simulador-corpo { grid-template-columns: 1fr; }
+  .fluxo-seta { transform: rotate(0); }
+  .controles-secundario { display: none; }
+}
+
+@media print {
+  .topo, .controles-apresentacao, .progresso-leitura, .botao-copiar { display: none !important; }
+  .slide { page-break-after: always; }
+}
+
+</style>
+</head>
+<body>
+
+  <!-- Barra de progresso da leitura -->
+  <div class="progresso-leitura" id="progressoLeitura"></div>
+
+  <!-- ================= CABEÇALHO ================= -->
+  <header class="topo">
+    <a href="#capa" class="topo-marca">
+      <span class="sol-mini" aria-hidden="true"></span>
+      Piscina Solar
+    </a>
+    <nav class="topo-links" aria-label="Menu principal">
+      <a href="#roteiro">Roteiro</a>
+      <a href="#s1">Radiação</a>
+      <a href="#s6">Sistema</a>
+      <a href="#s10">Caldeira</a>
+      <a href="#s11">Tinkercad</a>
+      <a href="#s12">Curitiba</a>
+      <a href="#fontes">Fontes</a>
+    </nav>
+    <button class="botao-apresentar" id="botaoApresentar" type="button">
+      ▶ Modo apresentação
+    </button>
+  </header>
+
+  <main>
+
+    <!-- ================= CAPA ================= -->
+    <section class="slide capa" id="capa" data-apresentador="Rafaela">
+      <div class="capa-texto">
+        <p class="sobretitulo">Projeto Integrador</p>
+        <h1>Aquecimento Solar<br>da Piscina Escolar</h1>
+        <p class="capa-sub">Como usar a energia do Sol, com apoio elétrico, para manter a piscina da escola aquecida gastando menos e poluindo menos.</p>
+        <ul class="capa-equipe">
+          <li style="--cor: var(--rafaela)">Rafaela</li>
+          <li style="--cor: var(--beatriz)">Beatriz</li>
+          <li style="--cor: var(--daniel)">Daniel</li>
+          <li style="--cor: var(--amanda)">Amanda</li>
+        </ul>
+      </div>
+      <figure class="foto foto-capa">
+        <img data-imagem="imagem1" alt="Foto da piscina real da escola">
+        <figcaption>A piscina da escola, foco do nosso projeto.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= ROTEIRO / EQUIPE ================= -->
+    <section class="slide" id="roteiro" data-apresentador="Rafaela">
+      <div class="conteudo">
+        <h2><span class="num">★</span> Equipe e roteiro da apresentação</h2>
+        <div class="roteiro-grade">
+          <div class="roteiro-cartao" style="--cor: var(--rafaela)">
+            <h3>Rafaela</h3>
+            <ol>
+              <li><a href="#s1">O que é radiação solar?</a></li>
+              <li><a href="#s2">Por que essas radiações importam?</a></li>
+              <li><a href="#s3">Proposta sustentável</a></li>
+            </ol>
+          </div>
+          <div class="roteiro-cartao" style="--cor: var(--beatriz)">
+            <h3>Beatriz</h3>
+            <ol start="4">
+              <li><a href="#s4">Panorama das formas de aquecer</a></li>
+              <li><a href="#s5">A luz solar e as placas solares</a></li>
+              <li><a href="#s6">O sistema de aquecimento</a></li>
+            </ol>
+          </div>
+          <div class="roteiro-cartao" style="--cor: var(--daniel)">
+            <h3>Daniel</h3>
+            <ol start="7">
+              <li><a href="#s7">Desafios para aquecer a piscina</a></li>
+              <li><a href="#s8">Por que usar energia solar?</a></li>
+              <li><a href="#s9">Placas solares para viabilizar o custo</a></li>
+              <li><a href="#s10">A caldeira</a></li>
+            </ol>
+          </div>
+          <div class="roteiro-cartao" style="--cor: var(--amanda)">
+            <h3>Amanda</h3>
+            <ol start="11">
+              <li><a href="#s11">Aplicação no Tinkercad</a></li>
+              <li><a href="#s12">Energia elétrica + solar em Curitiba</a></li>
+              <li><a href="#conclusao">Conclusão</a></li>
+            </ol>
+          </div>
+        </div>
+        <figure class="foto foto-media">
+          <img data-imagem="imagem9" alt="Foto do grupo: Rafaela, Beatriz, Daniel e Amanda">
+          <figcaption>Nossa equipe.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= 1. RADIAÇÃO SOLAR ================= -->
+    <section class="slide" id="s1" data-apresentador="Rafaela">
+      <div class="conteudo duas-colunas">
+        <div>
+          <h2><span class="num">1</span> O que é radiação solar?</h2>
+          <p>A radiação solar é energia que o Sol emite na forma de <strong>ondas eletromagnéticas</strong>, que viajam pelo espaço e chegam à Terra. Ela se divide em três partes principais:</p>
+
+          <div class="barra-espectro" role="img" aria-label="Divisão da radiação solar: infravermelho 47%, luz visível 43%, ultravioleta 10%">
+            <span class="faixa iv" style="flex: 47">IV 47%</span>
+            <span class="faixa vis" style="flex: 43">Visível 43%</span>
+            <span class="faixa uv" style="flex: 10">UV</span>
+          </div>
+
+          <ul class="lista-cartoes">
+            <li><strong>Infravermelho (~47%)</strong>: invisível, é percebido como calor. É o principal responsável por aquecer superfícies e a água.</li>
+            <li><strong>Luz visível (~43%)</strong>: a parte que enxergamos. Ao ser absorvida por superfícies escuras, também se converte em calor.</li>
+            <li><strong>Ultravioleta (~10%)</strong>: invisível e muito energética. É a que causa bronzeamento e queimaduras, e a atmosfera filtra boa parte dela.</li>
+          </ul>
+        </div>
+        <figure class="foto">
+          <img data-imagem="imagem2" alt="O Sol / esquema das radiações solares">
+          <figcaption>O Sol: nossa fonte de energia.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= 2. POR QUE IMPORTAM ================= -->
+    <section class="slide" id="s2" data-apresentador="Rafaela">
+      <div class="conteudo">
+        <h2><span class="num">2</span> Por que essas radiações importam para o projeto?</h2>
+        <p class="destaque-grande">Elas são a nossa <strong>fonte de energia gratuita</strong>.</p>
+        <div class="grade-3">
+          <div class="cartao">
+            <span class="cartao-icone" aria-hidden="true">🔥</span>
+            <h3>Viram calor</h3>
+            <p>O infravermelho e a luz visível, ao serem absorvidos, transformam-se em calor e podem aquecer a água diretamente.</p>
+          </div>
+          <div class="cartao">
+            <span class="cartao-icone" aria-hidden="true">⚡</span>
+            <h3>Viram eletricidade</h3>
+            <p>A luz também pode ser convertida em eletricidade por placas solares, que alimentam bombas, resistências ou outros equipamentos.</p>
+          </div>
+          <div class="cartao">
+            <span class="cartao-icone" aria-hidden="true">🌱</span>
+            <h3>Economia e meio ambiente</h3>
+            <p>Aproveitar esse recurso reduz a conta de energia e o impacto ambiental.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. PROPOSTA SUSTENTÁVEL ================= -->
+    <section class="slide" id="s3" data-apresentador="Rafaela">
+      <div class="conteudo duas-colunas">
+        <div>
+          <h2><span class="num">3</span> Proposta sustentável</h2>
+          <p>Usar o <strong>Sol como principal fonte de energia</strong>, combinando:</p>
+          <ul class="lista-cartoes">
+            <li><strong>Coletores solares</strong> que aquecem a água diretamente;</li>
+            <li><strong>Placas fotovoltaicas</strong> que geram eletricidade para os equipamentos;</li>
+            <li><strong>Manta térmica</strong> para manter o calor já conquistado.</li>
+          </ul>
+          <p class="resultado">O resultado é uma piscina aquecida com <strong>baixa emissão de poluentes</strong> e <strong>custo de operação reduzido</strong>.</p>
+        </div>
+        <figure class="foto">
+          <img data-imagem="imagem3" alt="Coletores solares térmicos para aquecimento de piscina">
+          <figcaption>Coletores solares: aquecem a água diretamente.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= 4. PANORAMA ================= -->
+    <section class="slide" id="s4" data-apresentador="Beatriz">
+      <div class="conteudo">
+        <h2><span class="num">4</span> Panorama das formas de aquecer</h2>
+        <div class="tabela-rolagem">
+          <table>
+            <thead>
+              <tr><th>Forma</th><th>Como funciona</th><th>Ponto de atenção</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Caldeira separada</td><td>Aquece a água fora da piscina e a transfere depois</td><td>Exige estrutura extra e energia para a caldeira</td></tr>
+              <tr><td>Aquecimento elétrico</td><td>Resistência elétrica ou bomba de calor aquece a água em circulação</td><td>Consumo elétrico alto</td></tr>
+              <tr><td>A gás</td><td>Queima de gás aquece a água</td><td>Custo do combustível e emissão de CO₂</td></tr>
+              <tr><td>Coletores solares</td><td>A água circula por placas expostas ao Sol e volta aquecida</td><td>Depende do clima e do espaço disponível</td></tr>
+              <tr class="linha-escolhida"><td>Sistema híbrido ✔</td><td>Solar como base, com apoio elétrico em dias nublados</td><td>Melhor equilíbrio entre custo e confiabilidade</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. CONTEXTO ================= -->
+    <section class="slide" id="s5" data-apresentador="Beatriz">
+      <div class="conteudo">
+        <h2><span class="num">5</span> Contexto: a luz solar e as placas solares</h2>
+        <div class="numero-gigante">
+          <span class="valor">≈ 1.000 W</span>
+          <span class="rotulo">por metro quadrado chegam à superfície da Terra em um dia limpo</span>
+        </div>
+        <p>O Sol emite energia o tempo todo. Essa energia pode ser aproveitada de duas formas:</p>
+        <div class="grade-2">
+          <div class="cartao cartao-sol">
+            <h3>Como calor</h3>
+            <p>Coletores térmicos: a água passa por eles e esquenta.</p>
+          </div>
+          <div class="cartao cartao-azul">
+            <h3>Como eletricidade</h3>
+            <p>Placas fotovoltaicas: transformam luz em energia elétrica.</p>
+          </div>
+        </div>
+        <p class="resultado">Nossa proposta usa <strong>as duas</strong>.</p>
+      </div>
+    </section>
+
+    <!-- ================= 6. SISTEMA DE AQUECIMENTO ================= -->
+    <section class="slide" id="s6" data-apresentador="Beatriz">
+      <div class="conteudo">
+        <h2><span class="num">6</span> O sistema de aquecimento</h2>
+
+        <div class="fluxo" aria-label="Caminho da água no sistema">
+          <div class="fluxo-passo">🏊<span>Piscina</span></div>
+          <div class="fluxo-seta" aria-hidden="true">→</div>
+          <div class="fluxo-passo">⚙️<span>Bomba</span></div>
+          <div class="fluxo-seta" aria-hidden="true">→</div>
+          <div class="fluxo-passo">🧽<span>Filtro</span></div>
+          <div class="fluxo-seta" aria-hidden="true">→</div>
+          <div class="fluxo-passo sol">☀️<span>Coletores solares</span></div>
+          <div class="fluxo-seta" aria-hidden="true">→</div>
+          <div class="fluxo-passo apoio">🔌<span>Apoio (dias de pouco Sol)</span></div>
+          <div class="fluxo-seta" aria-hidden="true">→</div>
+          <div class="fluxo-passo">🏊<span>Volta à piscina</span></div>
+        </div>
+
+        <div class="duas-colunas">
+          <ol class="passos">
+            <li>A bomba retira água da piscina e a envia ao filtro.</li>
+            <li>A água filtrada passa pelos coletores solares, onde absorve a radiação e esquenta.</li>
+            <li>A água aquecida retorna à piscina.</li>
+            <li>Em dias de pouco Sol, um aquecedor de apoio complementa o aquecimento.</li>
+            <li>As placas fotovoltaicas fornecem a eletricidade para a bomba e o apoio.</li>
+            <li>A manta térmica cobre a piscina quando ela não está em uso.</li>
+          </ol>
+          <figure class="foto">
+            <img data-imagem="imagem6" alt="Casa de máquinas da piscina: bomba e filtro">
+            <figcaption>Bomba e filtro: onde a água começa o caminho.</figcaption>
+          </figure>
+        </div>
+
+        <div class="caixa-fisica">
+          <h3>Física envolvida</h3>
+          <p>A água precisa de muita energia para esquentar (<strong>calor específico de 4,18 kJ/kg·°C</strong>). Aquecer <strong>1 m³</strong> de água em <strong>1 °C</strong> exige cerca de <strong>1,16 kWh</strong>, e a piscina tem centenas de metros cúbicos. Por isso o aquecimento é lento e exige planejamento.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 7. DESAFIOS ================= -->
+    <section class="slide" id="s7" data-apresentador="Daniel">
+      <div class="conteudo duas-colunas">
+        <div>
+          <h2><span class="num">7</span> Desafios para aquecer a piscina</h2>
+          <ul class="lista-cartoes">
+            <li><strong>Perda de calor:</strong> a piscina perde energia principalmente por evaporação, e também por convecção, radiação e contato com o ambiente. A manta térmica reduz muito essa perda.</li>
+            <li><strong>Grande volume de água:</strong> aquecer tudo de uma vez exige muita energia. Uma alternativa é aquecer a água separadamente, em partes, antes de enviá-la à piscina.</li>
+            <li><strong>Tentativa anterior sem sucesso:</strong> o colégio já tentou aquecer a piscina com aquecimento a gás/elétrico. O sistema não funcionou como esperado e teve custo muito alto, o que mostra que depender só de energia comprada não é viável.</li>
+            <li><strong>Variações climáticas:</strong> em dias frios ou nublados, a eficiência cai.</li>
+          </ul>
+        </div>
+        <figure class="foto">
+          <img data-imagem="imagem5" alt="Manta térmica cobrindo uma piscina">
+          <figcaption>Manta térmica: reduz a perda de calor por evaporação.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= 8. POR QUE SOLAR ================= -->
+    <section class="slide" id="s8" data-apresentador="Daniel">
+      <div class="conteudo">
+        <h2><span class="num">8</span> Por que usar energia solar?</h2>
+        <p>Diante dessas dificuldades, a energia solar se mostra a melhor escolha:</p>
+        <div class="grade-3">
+          <div class="cartao"><span class="cartao-icone" aria-hidden="true">💰</span><h3>Custo de operação baixo</h3><p>O Sol não cobra pela energia.</p></div>
+          <div class="cartao"><span class="cartao-icone" aria-hidden="true">🌿</span><h3>Sustentável</h3><p>Não emite poluentes durante o uso.</p></div>
+          <div class="cartao"><span class="cartao-icone" aria-hidden="true">🛠️</span><h3>Durável</h3><p>Os equipamentos solares têm vida útil longa e pouca manutenção.</p></div>
+          <div class="cartao"><span class="cartao-icone" aria-hidden="true">📉</span><h3>Resolve o problema do custo</h3><p>A experiência anterior mostrou que combustível e eletricidade comprados pesam demais no orçamento.</p></div>
+          <div class="cartao"><span class="cartao-icone" aria-hidden="true">🎓</span><h3>Valor educativo</h3><p>A piscina vira um exemplo prático de física aplicada.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 9. PLACAS SOLARES ================= -->
+    <section class="slide" id="s9" data-apresentador="Daniel">
+      <div class="conteudo duas-colunas">
+        <div>
+          <h2><span class="num">9</span> Placas solares para viabilizar o custo</h2>
+          <p>Os coletores aquecem a água, mas o sistema ainda precisa de <strong>eletricidade</strong> para bombas e equipamentos de apoio.</p>
+          <ul class="lista-cartoes">
+            <li>As placas fotovoltaicas geram essa energia a partir da luz do Sol e <strong>reduzem ou eliminam a conta de luz</strong> do sistema.</li>
+            <li>O investimento inicial <strong>se paga ao longo dos anos</strong> pela economia mensal.</li>
+            <li>A energia que sobrar pode ainda <strong>abater o consumo de outras partes da escola</strong>.</li>
+          </ul>
+        </div>
+        <figure class="foto">
+          <img data-imagem="imagem4" alt="Placas fotovoltaicas instaladas em um telhado">
+          <figcaption>Placas fotovoltaicas: luz do Sol vira eletricidade.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ================= 10. CALDEIRA ================= -->
+    <section class="slide" id="s10" data-apresentador="Daniel">
+      <div class="conteudo">
+        <h2><span class="num">10</span> A caldeira</h2>
+        <div class="duas-colunas">
+          <div>
+            <p>A caldeira é o <strong>equipamento de apoio</strong> que aquece a água quando os coletores solares não dão conta sozinhos. Ela recebe a água já pré-aquecida pelo Sol, completa o aquecimento até a temperatura desejada e devolve a água à piscina.</p>
+            <h3>Como funciona no nosso sistema</h3>
+            <ol class="passos">
+              <li>A água sai do filtro e passa primeiro pelos coletores solares.</li>
+              <li>Um sensor mede a temperatura da água na saída dos coletores.</li>
+              <li>Se a água já está na temperatura-alvo, a caldeira fica desligada e a água segue direto para a piscina.</li>
+              <li>Se está abaixo do alvo, a caldeira liga e fornece só o calor que falta.</li>
+            </ol>
+          </div>
+          <figure class="foto">
+            <img data-imagem="imagem7" alt="Caldeira / aquecedor de apoio para piscina">
+            <figcaption>Caldeira: o apoio para os dias de pouco Sol.</figcaption>
+          </figure>
+        </div>
+
+        <h3>Tipos que podem ser usados</h3>
+        <div class="grade-2">
+          <div class="cartao cartao-azul">
+            <h3>Elétrica</h3>
+            <p>Uma resistência aquece a água em circulação. É simples de instalar e pode ser alimentada pelas placas fotovoltaicas.</p>
+          </div>
+          <div class="cartao cartao-sol">
+            <h3>A gás</h3>
+            <p>A queima do gás aquece a água. Aquece rápido, mas tem custo de combustível e emite CO₂.</p>
+          </div>
+        </div>
+
+        <div class="caixa-fisica">
+          <h3>Por que ela é um apoio, e não a fonte principal</h3>
+          <p>A experiência anterior do colégio mostrou que aquecer a piscina só com gás ou eletricidade comprados custou caro demais. Com o Sol fazendo a maior parte do trabalho, a caldeira liga menos e por menos tempo.</p>
+          <p><strong>Ordem de grandeza</strong> (exemplo ilustrativo, com volume hipotético): elevar <strong>50 m³</strong> de água em <strong>2 °C</strong> exige cerca de <strong>116 kWh</strong> (50 m³ × 2 °C × 1,16 kWh por m³·°C). A caldeira só precisa fornecer a parte dessa energia que o Sol não entregar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 11. TINKERCAD ================= -->
+    <section class="slide" id="s11" data-apresentador="Amanda">
+      <div class="conteudo">
+        <h2><span class="num">11</span> Aplicação simples no Tinkercad</h2>
+        <p>No <strong>Tinkercad Circuits</strong> dá para simular o controle da caldeira com um Arduino: um sensor mede a temperatura da água e um LED representa a caldeira, que liga quando a água está fria e desliga quando atinge a temperatura-alvo. É uma <strong>maquete virtual</strong> do funcionamento, sem risco e sem custo.</p>
+
+        <h3>Componentes</h3>
+        <div class="tabela-rolagem">
+          <table>
+            <thead><tr><th>Componente</th><th>Função na simulação</th><th>Ligação</th></tr></thead>
+            <tbody>
+              <tr><td>Arduino Uno</td><td>Cérebro do controle</td><td>—</td></tr>
+              <tr><td>Sensor de temperatura TMP36</td><td>Mede a temperatura da água</td><td>5V, GND e saída no pino A0</td></tr>
+              <tr><td>LED vermelho + resistor de 220 Ω</td><td>Representa a caldeira ligada</td><td>LED no pino 8, resistor em série, outro lado no GND</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="duas-colunas">
+          <div>
+            <h3>Passo a passo</h3>
+            <ol class="passos">
+              <li>No Tinkercad, crie um novo circuito (Circuits) e adicione os componentes da tabela.</li>
+              <li>Conecte o TMP36 e o LED como indicado.</li>
+              <li>Abra o editor de código, escolha a opção de texto e cole o programa abaixo.</li>
+              <li>Inicie a simulação, clique no sensor e arraste o controle de temperatura: abaixo de 27 °C o LED acende; acima de 29 °C ele apaga.</li>
+            </ol>
+          </div>
+          <figure class="foto">
+            <img data-imagem="imagem8" alt="Print do circuito montado no Tinkercad com Arduino, TMP36 e LED">
+            <figcaption>Nosso circuito montado no Tinkercad.</figcaption>
+          </figure>
+        </div>
+
+        <div class="codigo-caixa">
+          <button class="botao-copiar" type="button" data-copiar="codigoArduino">Copiar código</button>
+<pre><code id="codigoArduino">const int PIN_TEMP = A0;        // sensor TMP36
+const int PIN_CALDEIRA = 8;     // LED que representa a caldeira
+const float ALVO = 28.0;        // temperatura desejada (°C)
+const float HISTERESE = 1.0;    // folga para não ligar e desligar o tempo todo
+
+void setup() {
+  pinMode(PIN_CALDEIRA, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  float tensao = analogRead(PIN_TEMP) * 5.0 / 1024.0;
+  float temp = (tensao - 0.5) * 100.0;   // conversão do TMP36 para °C
+
+  if (temp &lt; ALVO - HISTERESE) {
+    digitalWrite(PIN_CALDEIRA, HIGH);    // água fria: liga a caldeira
+  } else if (temp &gt; ALVO + HISTERESE) {
+    digitalWrite(PIN_CALDEIRA, LOW);     // água no alvo: desliga
+  }
+
+  Serial.println(temp);
+  delay(500);
+}</code></pre>
+        </div>
+
+        <!-- Mini simulador no próprio site -->
+        <div class="simulador">
+          <h3>Teste aqui mesmo: arraste a temperatura da água</h3>
+          <div class="simulador-corpo">
+            <div class="simulador-controle">
+              <label for="tempSim">Temperatura da água: <strong id="tempValor">25,0 °C</strong></label>
+              <input type="range" id="tempSim" min="15" max="40" step="0.5" value="25">
+              <div class="simulador-escala"><span>15 °C</span><span>alvo 28 °C</span><span>40 °C</span></div>
+            </div>
+            <div class="simulador-led">
+              <div class="led" id="ledSim" aria-hidden="true"></div>
+              <p id="estadoSim">Caldeira LIGADA</p>
+            </div>
+          </div>
+          <p class="nota">Mesma lógica do código: liga abaixo de 27 °C, desliga acima de 29 °C. Entre 27 e 29 °C ela mantém o estado anterior (histerese).</p>
+        </div>
+
+        <div class="grade-2">
+          <div class="cartao cartao-sol">
+            <h3>Para evoluir o projeto</h3>
+            <p>Adicionar um <strong>fotorresistor (LDR)</strong> para representar o Sol: com bastante luz, a caldeira fica desligada mesmo que a água esteja um pouco abaixo do alvo, e só entra em dias escuros. Isso reproduz a lógica do sistema híbrido.</p>
+          </div>
+          <div class="cartao cartao-alerta">
+            <h3>Limite da simulação</h3>
+            <p>O LED apenas representa a caldeira. Em um sistema real, a caldeira elétrica é ligada por um relé ou contator dimensionado para a potência dela, e a instalação deve ser feita por profissional habilitado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 12. CURITIBA ================= -->
+    <section class="slide" id="s12" data-apresentador="Amanda">
+      <div class="conteudo">
+        <h2><span class="num">12</span> Por que a energia elétrica deve acompanhar a solar em Curitiba</h2>
+        <div class="duas-colunas">
+          <div>
+            <p>Em Curitiba o Sol sozinho não garante a água aquecida o ano todo: ele é mais fraco <strong>justamente no inverno</strong>, quando a piscina mais perde calor. Por isso o projeto prevê a <strong>caldeira elétrica como apoio</strong>, alimentada pela rede e, quando possível, pelas placas fotovoltaicas.</p>
+
+            <div class="grafico-barras" role="img" aria-label="Irradiação média diária no Paraná: verão 5,88 kWh/m², inverno 3,47 kWh/m²">
+              <p class="grafico-titulo">Irradiação média diária no Paraná (kWh/m²)</p>
+              <div class="barra-linha">
+                <span class="barra-rotulo">Verão</span>
+                <span class="barra-trilho"><span class="barra verao" style="width: 100%"></span></span>
+                <span class="barra-valor">5,88</span>
+              </div>
+              <div class="barra-linha">
+                <span class="barra-rotulo">Inverno</span>
+                <span class="barra-trilho"><span class="barra inverno" style="width: 59%"></span></span>
+                <span class="barra-valor">3,47</span>
+              </div>
+              <p class="grafico-nota">No inverno chega cerca de 41% menos energia do Sol.</p>
+            </div>
+          </div>
+          <figure class="foto">
+            <img data-imagem="imagem10" alt="Dia nublado ou com nevoeiro em Curitiba">
+            <figcaption>Inverno em Curitiba: menos Sol, mais nevoeiro.</figcaption>
+          </figure>
+        </div>
+
+        <div class="tabela-rolagem">
+          <table>
+            <thead><tr><th>Indicador</th><th>Valor</th><th>Fonte</th></tr></thead>
+            <tbody>
+              <tr><td>Irradiação média diária no Paraná, verão</td><td>5,88 kWh/m²</td><td><a href="https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2018/11/SILVEIRA-et-al-Artigo-Completo-Smart-Energy-2018-.pdf" target="_blank" rel="noopener">Silveira et al., UTFPR (2018)</a></td></tr>
+              <tr><td>Irradiação média diária no Paraná, inverno</td><td>3,47 kWh/m² (cerca de 41% menos que no verão)</td><td><a href="https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2018/11/SILVEIRA-et-al-Artigo-Completo-Smart-Energy-2018-.pdf" target="_blank" rel="noopener">Silveira et al., UTFPR (2018)</a></td></tr>
+              <tr><td>Média diária da Região Sul vs. Nordeste</td><td>4,44 vs. 5,48 kWh/m² (Sul cerca de 19% menor)</td><td><a href="https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2018/11/SILVEIRA-et-al-Artigo-Completo-Smart-Energy-2018-.pdf" target="_blank" rel="noopener">Silveira et al., UTFPR (2018)</a></td></tr>
+              <tr><td>Dias com sol em Curitiba em 2013</td><td>116 dias (32% do ano)</td><td><a href="https://www.gazetadopovo.com.br/curitiba/curitiba-tem-menos-dias-de-sol-que-ny-londres-berlim-e-praga-97wqsyff1z08plrq9sby7v0i6/" target="_blank" rel="noopener">Gazeta do Povo</a></td></tr>
+              <tr><td>Dias de nevoeiro em Curitiba, junho e julho</td><td>cerca de 10 por mês</td><td><a href="https://www.gazetadopovo.com.br/vida-e-cidadania/curitiba-a-nublada-e75qodg3ifavetbef8ndafaz2" target="_blank" rel="noopener">Gazeta do Povo</a></td></tr>
+              <tr><td>Duração do dia no solstício de inverno em Curitiba</td><td>10 h 41 min</td><td><a href="https://www.bemparana.com.br/noticias/parana/curitiba-tera-um-dos-dias-mais-curtos-do-brasil-no-domingo-entenda" target="_blank" rel="noopener">Bem Paraná</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="nota">A contagem de 116 dias vem de uma ferramenta da Embratur que não divulgou sua metodologia; use-a como ordem de grandeza. Os valores de irradiação são do estado do Paraná, não só de Curitiba.</p>
+
+        <h3>O que isso significa para o projeto</h3>
+        <ul class="lista-cartoes">
+          <li><strong>A demanda de calor e a oferta de Sol andam em sentidos opostos.</strong> No inverno a piscina esfria mais rápido e o Sol entrega menos energia.</li>
+          <li><strong>Frentes frias e nevoeiro derrubam a produção por vários dias seguidos.</strong> Em um inverno típico, a chuva chega ao fim de um intervalo de seis a sete dias entre frentes frias, segundo a <a href="https://www.gazetadopovo.com.br/vida-e-cidadania/por-que-curitiba-e-tao-nublada-0j0tpsa38sv2f27zq4e81sfec" target="_blank" rel="noopener">Gazeta do Povo</a>.</li>
+          <li><strong>As placas fotovoltaicas também produzem menos no inverno.</strong> Em um sistema da UTFPR em Curitiba, a geração mínima mensal foi de 112 kWh em junho de 2012 e de 2013, contra uma média de cerca de 197 kWh por mês (2.364 kWh por ano), segundo o mesmo <a href="https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2018/11/SILVEIRA-et-al-Artigo-Completo-Smart-Energy-2018-.pdf" target="_blank" rel="noopener">estudo da UTFPR</a>.</li>
+          <li><strong>Apoio elétrico garante a temperatura nos dias ruins.</strong> A caldeira elétrica entra só para completar o que falta, e a manta térmica reduz o calor que ela precisa repor.</li>
+        </ul>
+        <p class="resultado">O Sol continua sendo a base do sistema, principalmente de setembro a março. A eletricidade não substitui a energia solar: ela cobre os dias e as estações em que o Sol de Curitiba não basta.</p>
+      </div>
+    </section>
+
+    <!-- ================= CONCLUSÃO ================= -->
+    <section class="slide conclusao" id="conclusao" data-apresentador="Amanda">
+      <div class="conteudo">
+        <h2><span class="num">✓</span> Conclusão</h2>
+        <div class="grade-3">
+          <div class="cartao cartao-sol"><h3>☀️ Sol como base</h3><p>Coletores solares aquecem a água e placas fotovoltaicas geram a eletricidade do sistema.</p></div>
+          <div class="cartao cartao-azul"><h3>🛡️ Manta térmica</h3><p>Guarda o calor já conquistado e reduz a perda por evaporação.</p></div>
+          <div class="cartao"><h3>🔌 Caldeira de apoio</h3><p>Liga só quando falta calor, nos dias frios e nublados de Curitiba.</p></div>
+        </div>
+        <p class="destaque-grande">Uma piscina aquecida com <strong>baixa emissão de poluentes</strong>, <strong>custo de operação reduzido</strong> e que ainda vira <strong>um exemplo prático de física aplicada</strong>.</p>
+        <p class="agradecimento">Obrigado!</p>
+      </div>
+    </section>
+
+    <!-- ================= FONTES ================= -->
+    <section class="slide" id="fontes" data-apresentador="Todos">
+      <div class="conteudo">
+        <h2><span class="num">📚</span> Fontes</h2>
+        <ol class="lista-fontes">
+          <li>SILVEIRA, C. O.; TONOLO, E. A.; KRASNHAK, L. B.; URBANETZ JUNIOR, J. <em>Acompanhamento de desempenho e contribuição da capacidade instalada de SFVCR frente ao panorama nacional.</em> XXII Congresso Brasileiro de Automática, João Pessoa: SBA, 2018. UTFPR / LABENS. Disponível em: <a href="https://utfpr-ct-static-content.s3.amazonaws.com/labens.ct.utfpr.edu.br/wp-content/uploads/2018/11/SILVEIRA-et-al-Artigo-Completo-Smart-Energy-2018-.pdf" target="_blank" rel="noopener">labens.ct.utfpr.edu.br (PDF)</a>.</li>
+          <li>GAZETA DO POVO. <em>Curitiba tem menos dias de sol que NY, Londres, Berlim e Praga.</em> Curitiba, 2014. Disponível em: <a href="https://www.gazetadopovo.com.br/curitiba/curitiba-tem-menos-dias-de-sol-que-ny-londres-berlim-e-praga-97wqsyff1z08plrq9sby7v0i6/" target="_blank" rel="noopener">gazetadopovo.com.br</a>.</li>
+          <li>GAZETA DO POVO. <em>Curitiba, a nublada.</em> Disponível em: <a href="https://www.gazetadopovo.com.br/vida-e-cidadania/curitiba-a-nublada-e75qodg3ifavetbef8ndafaz2" target="_blank" rel="noopener">gazetadopovo.com.br</a>.</li>
+          <li>GAZETA DO POVO. <em>Por que Curitiba é tão nublada?</em> Disponível em: <a href="https://www.gazetadopovo.com.br/vida-e-cidadania/por-que-curitiba-e-tao-nublada-0j0tpsa38sv2f27zq4e81sfec" target="_blank" rel="noopener">gazetadopovo.com.br</a>.</li>
+          <li>BEM PARANÁ. <em>Curitiba terá um dos dias mais curtos do Brasil no domingo; entenda.</em> Disponível em: <a href="https://www.bemparana.com.br/noticias/parana/curitiba-tera-um-dos-dias-mais-curtos-do-brasil-no-domingo-entenda" target="_blank" rel="noopener">bemparana.com.br</a>.</li>
+          <li>AUTODESK. <em>Tinkercad Circuits</em> (simulador usado na aplicação com Arduino). Disponível em: <a href="https://www.tinkercad.com" target="_blank" rel="noopener">tinkercad.com</a>.</li>
+        </ol>
+        <p class="nota">As imagens usadas no site são fotos reais do projeto e da piscina da escola, ou imagens indicadas com seus respectivos créditos.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="rodape">
+    <p><strong>Aquecimento Solar da Piscina Escolar</strong> · Projeto Integrador</p>
+    <p>Rafaela · Beatriz · Daniel · Amanda</p>
+  </footer>
+
+  <!-- ================= CONTROLES DO MODO APRESENTAÇÃO ================= -->
+  <div class="controles-apresentacao" id="controles" hidden>
+    <button type="button" id="btnAnterior" aria-label="Slide anterior">←</button>
+    <div class="controles-info">
+      <span class="controles-quem" id="controlesQuem">Amanda</span>
+      <span class="controles-contador" id="controlesContador">1 / 16</span>
+    </div>
+    <button type="button" id="btnProximo" aria-label="Próximo slide">→</button>
+    <button type="button" id="btnTelaCheia" class="controles-secundario" aria-label="Tela cheia">⛶</button>
+    <button type="button" id="btnSair" class="controles-secundario" aria-label="Sair do modo apresentação">✕ Sair</button>
+    <div class="controles-barra"><span id="controlesBarra"></span></div>
+  </div>
+
+  <script>
+/* =========================================================
+   Aquecimento Solar da Piscina Escolar — script
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1) IMAGENS
+   Cada <img data-imagem="imagem1"> procura o arquivo na pasta
+   "imagens/" tentando várias extensões: imagem1.jpg, .jpeg,
+   .png, .webp (minúsculas ou maiúsculas). Se nenhuma existir,
+   aparece um quadro tracejado avisando qual arquivo falta.
+   --------------------------------------------------------- */
+const PASTA_IMAGENS = "imagens/";
+const EXTENSOES = ["jpg", "jpeg", "png", "webp", "JPG", "JPEG", "PNG", "WEBP"];
+
+document.querySelectorAll("img[data-imagem]").forEach((img) => {
+  const nome = img.dataset.imagem;
+  const figura = img.closest("figure");
+
+  // Cria o quadro de "vaga" para a imagem
+  const vaga = document.createElement("div");
+  vaga.className = "vaga-imagem";
+  const numero = nome.replace(/\D/g, "");
+  vaga.innerHTML =
+    '<span class="vaga-icone" aria-hidden="true">📷</span>' +
+    '<span class="vaga-nome">Imagem ' + numero + "</span>" +
+    "<span>" + (img.alt || "") + "</span>" +
+    "<span>Coloque o arquivo <code>" + PASTA_IMAGENS + nome + ".jpg</code> (ou .png)</span>";
+  figura.insertBefore(vaga, img);
+
+  // Procura primeiro na pasta "imagens/" e, se não achar, ao lado do index.html
+  const caminhos = [];
+  [PASTA_IMAGENS, ""].forEach((pasta) =>
+    EXTENSOES.forEach((ext) => caminhos.push(pasta + nome + "." + ext))
+  );
+  let tentativa = 0;
+  const tentarProxima = () => {
+    if (tentativa >= caminhos.length) return; // nenhuma encontrada: fica a vaga
+    img.src = caminhos[tentativa++];
+  };
+  img.addEventListener("error", tentarProxima);
+  img.addEventListener("load", () => figura.classList.add("carregada"));
+  tentarProxima();
+});
+
+/* ---------------------------------------------------------
+   2) QUEM APRESENTA CADA PARTE
+   Para trocar a pessoa de uma seção, mude no index.html o
+   atributo data-apresentador="..." daquela <section>.
+   --------------------------------------------------------- */
+const CORES = {
+  Amanda: "var(--amanda)",
+  Beatriz: "var(--beatriz)",
+  Daniel: "var(--daniel)",
+  Rafaela: "var(--rafaela)",
+  Todos: "var(--todos)",
+};
+
+const slides = Array.from(document.querySelectorAll(".slide"));
+
+slides.forEach((secao) => {
+  const quem = secao.dataset.apresentador;
+  if (!quem) return;
+  const cor = CORES[quem] || "var(--todos)";
+  secao.style.setProperty("--cor", cor);
+
+  const selo = document.createElement("span");
+  selo.className = "selo-apresentador";
+  selo.textContent = quem === "Todos" ? "Apresentam: todos" : "Apresenta: " + quem;
+
+  let alvo = secao.querySelector(".conteudo") || secao;
+  // Em seções de duas colunas, o selo vai dentro da coluna de texto
+  if (alvo.classList.contains("duas-colunas")) alvo = alvo.firstElementChild;
+  alvo.insertBefore(selo, alvo.firstChild);
+});
+
+/* ---------------------------------------------------------
+   3) BARRA DE PROGRESSO DA LEITURA
+   --------------------------------------------------------- */
+const barraLeitura = document.getElementById("progressoLeitura");
+window.addEventListener("scroll", () => {
+  const total = document.documentElement.scrollHeight - window.innerHeight;
+  barraLeitura.style.width = (total > 0 ? (window.scrollY / total) * 100 : 0) + "%";
+});
+
+/* ---------------------------------------------------------
+   4) BOTÃO "COPIAR CÓDIGO"
+   --------------------------------------------------------- */
+document.querySelectorAll(".botao-copiar").forEach((botao) => {
+  botao.addEventListener("click", async () => {
+    const texto = document.getElementById(botao.dataset.copiar).innerText;
+    try {
+      await navigator.clipboard.writeText(texto);
+      botao.textContent = "Copiado ✓";
+    } catch (e) {
+      botao.textContent = "Selecione e copie";
+    }
+    setTimeout(() => (botao.textContent = "Copiar código"), 2000);
+  });
+});
+
+/* ---------------------------------------------------------
+   5) MINI SIMULADOR DA CALDEIRA (mesma lógica do Arduino)
+   --------------------------------------------------------- */
+const ALVO = 28.0;
+const HISTERESE = 1.0;
+let caldeiraLigada = true;
+
+const sliderTemp = document.getElementById("tempSim");
+const textoTemp = document.getElementById("tempValor");
+const led = document.getElementById("ledSim");
+const estado = document.getElementById("estadoSim");
+
+function atualizarSimulador() {
+  const temp = parseFloat(sliderTemp.value);
+  if (temp < ALVO - HISTERESE) caldeiraLigada = true;       // água fria: liga
+  else if (temp > ALVO + HISTERESE) caldeiraLigada = false; // água no alvo: desliga
+
+  textoTemp.textContent = temp.toFixed(1).replace(".", ",") + " °C";
+  led.classList.toggle("aceso", caldeiraLigada);
+  estado.textContent = caldeiraLigada ? "Caldeira LIGADA" : "Caldeira DESLIGADA";
+}
+if (sliderTemp) {
+  sliderTemp.addEventListener("input", atualizarSimulador);
+  atualizarSimulador();
+}
+
+/* ---------------------------------------------------------
+   6) MODO APRESENTAÇÃO
+   Teclas: → ou Espaço = próximo · ← = anterior
+           F = tela cheia · Esc = sair
+   --------------------------------------------------------- */
+const botaoApresentar = document.getElementById("botaoApresentar");
+const controles = document.getElementById("controles");
+const quemEl = document.getElementById("controlesQuem");
+const contadorEl = document.getElementById("controlesContador");
+const barraEl = document.getElementById("controlesBarra");
+let atual = 0;
+let apresentando = false;
+
+function mostrarSlide(i) {
+  atual = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, n) => s.classList.toggle("ativo", n === atual));
+  const s = slides[atual];
+  s.scrollTop = 0;
+
+  const quem = s.dataset.apresentador || "Todos";
+  quemEl.textContent = quem === "Todos" ? "Todos" : quem;
+  controles.style.setProperty("--cor", CORES[quem] || "var(--todos)");
+  contadorEl.textContent = atual + 1 + " / " + slides.length;
+  barraEl.style.width = ((atual + 1) / slides.length) * 100 + "%";
+  history.replaceState(null, "", "#" + s.id);
+}
+
+function iniciarApresentacao() {
+  // começa do slide que está na tela
+  const hash = location.hash.replace("#", "");
+  const indice = slides.findIndex((s) => s.id === hash);
+  apresentando = true;
+  document.body.classList.add("modo-apresentacao");
+  controles.hidden = false;
+  mostrarSlide(indice >= 0 ? indice : 0);
+}
+
+function sairApresentacao() {
+  apresentando = false;
+  document.body.classList.remove("modo-apresentacao");
+  controles.hidden = true;
+  slides.forEach((s) => s.classList.remove("ativo"));
+  if (document.fullscreenElement) document.exitFullscreen();
+  slides[atual].scrollIntoView();
+}
+
+function alternarTelaCheia() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen();
+}
+
+botaoApresentar.addEventListener("click", iniciarApresentacao);
+document.getElementById("btnProximo").addEventListener("click", () => mostrarSlide(atual + 1));
+document.getElementById("btnAnterior").addEventListener("click", () => mostrarSlide(atual - 1));
+document.getElementById("btnSair").addEventListener("click", sairApresentacao);
+document.getElementById("btnTelaCheia").addEventListener("click", alternarTelaCheia);
+
+// Links do roteiro também funcionam dentro da apresentação
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", (e) => {
+    if (!apresentando) return;
+    const i = slides.findIndex((s) => "#" + s.id === link.getAttribute("href"));
+    if (i >= 0) { e.preventDefault(); mostrarSlide(i); }
+  });
+});
+
+document.addEventListener("keydown", (e) => {
+  if (!apresentando) return;
+  if (e.target.matches("input, textarea")) return; // não atrapalhar o simulador
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); mostrarSlide(atual + 1); }
+  else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); mostrarSlide(atual - 1); }
+  else if (e.key === "Home") mostrarSlide(0);
+  else if (e.key === "End") mostrarSlide(slides.length - 1);
+  else if (e.key.toLowerCase() === "f") alternarTelaCheia();
+  else if (e.key === "Escape") sairApresentacao();
+});
+
+</script>
+</body>
+</html>
